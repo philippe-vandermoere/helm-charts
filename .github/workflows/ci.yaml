@@ -77,6 +77,9 @@ jobs:
         with:
           version: v3.3.1
 
+      - name: build docker image
+        run: docker build . -f .github/Dockerfile_nginx -t local/nginx:latest
+
       - name: Create kind ${{ matrix.k8s }} cluster
         uses: helm/kind-action@v1.1.0
         with:
