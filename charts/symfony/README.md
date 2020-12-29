@@ -33,9 +33,6 @@ Kubernetes: `>=1.18.0`
 | dependencies.services | list | `[]` |  |
 | dependencies.timeout | int | `20` |  |
 | env | object | `{}` |  |
-| image.imagePullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"php"` |  |
-| image.tag | string | `"8.0-alpine"` |  |
 | metrics.enabled | bool | `true` |  |
 | metrics.nginx.image.imagePullPolicy | string | `"IfNotPresent"` |  |
 | metrics.nginx.image.repository | string | `"nginx/nginx-prometheus-exporter"` |  |
@@ -56,9 +53,6 @@ Kubernetes: `>=1.18.0`
 | metrics.serviceMonitor.enabled | bool | `false` |  |
 | metrics.serviceMonitor.mamespace | string | `"prometheus"` |  |
 | migrations | list | `[]` |  |
-| web.nginx.image.imagePullPolicy | string | `"IfNotPresent"` |  |
-| web.nginx.image.repository | string | `"nginx"` |  |
-| web.nginx.image.tag | string | `"stable-alpine"` |  |
 | web.nginx.livenessProbe.enabled | bool | `true` |  |
 | web.nginx.livenessProbe.failureThreshold | int | `6` |  |
 | web.nginx.livenessProbe.initialDelaySeconds | int | `30` |  |
