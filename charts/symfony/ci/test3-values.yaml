@@ -1,0 +1,51 @@
+# define env
+
+image:
+  repository: php
+  tag: 8.0-alpine
+  imagePullPolicy: IfNotPresent
+
+env:
+  AA: "11"
+  BB: "22"
+  CC: "33"
+
+crons:
+  - name: cron1
+    enabled: true
+    schedule: "* * * * *"
+    command: cron1
+    env:
+      AA: "99"
+      BB: "88"
+      CC: "77"
+      DD: "33"
+
+migrations:
+  - name: migration1
+    enabled: true
+    command: migration1
+    env:
+      DD: "33"
+web:
+  php:
+    env:
+      BB: "88"
+      DD: "33"
+  nginx:
+    image:
+      repository: nginx
+      tag: stable-alpine
+      imagePullPolicy: Never
+
+workers:
+  - name: worker1
+    enabled: true
+    replica: 1
+    command: worker1
+    env:
+      EE: "66"
+  - name: worker2
+    enabled: true
+    replica: 1
+    command: worker2

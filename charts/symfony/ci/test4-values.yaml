@@ -1,0 +1,13 @@
+# define version
+version: 1.0.0
+image:
+  repository: php
+  tag: 8.0-alpine
+  imagePullPolicy: IfNotPresent
+
+web:
+  nginx:
+    image:
+      repository: nginx
+      tag: stable-alpine
+      imagePullPolicy: Never

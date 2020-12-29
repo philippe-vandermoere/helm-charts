@@ -1,8 +1,8 @@
-#version: 1.0.0
-image:
-  repository: php
-  tag: 8.0-alpine
-  imagePullPolicy: IfNotPresent
+# version: 1.0.0
+# image:
+#  repository: php
+#  tag: 8.0-alpine
+#  imagePullPolicy: IfNotPresent
 
 env: {}
 #  TIMEZONE: utc
@@ -14,10 +14,10 @@ web:
     port: 80
   nginx:
     port: 80
-    image:
-      repository: nginx
-      tag: stable-alpine
-      imagePullPolicy: IfNotPresent
+#    image:
+#      repository: nginx
+#      tag: stable-alpine
+#      imagePullPolicy: IfNotPresent
     livenessProbe:
       enabled: true
       initialDelaySeconds: 30

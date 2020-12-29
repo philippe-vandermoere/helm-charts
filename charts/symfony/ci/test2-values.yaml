@@ -1,0 +1,57 @@
+# define locally image
+crons:
+  - name: cron1
+    enabled: true
+    schedule: "* * * * *"
+    command: cron1
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: Always
+  - name: cron2
+    enabled: true
+    schedule: "* * * * *"
+    command: cron2
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: Always
+
+migrations:
+  - name: migration1
+    enabled: true
+    command: migration1
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: Always
+
+web:
+  php:
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: IfNotPresent
+  nginx:
+    image:
+      repository: nginx
+      tag: stable-alpine
+      imagePullPolicy: Never
+
+workers:
+  - name: worker1
+    enabled: true
+    replica: 1
+    command: worker1
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: IfNotPresent
+  - name: worker2
+    enabled: true
+    replica: 1
+    command: worker2
+    image:
+      repository: php
+      tag: 8.0-alpine
+      imagePullPolicy: IfNotPresent

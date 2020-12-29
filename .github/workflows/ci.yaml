@@ -12,10 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run chart-testing (lint)
-        uses: helm/chart-testing-action@master
+        uses: helm/chart-testing-action@v3
         with:
           command: lint
-          config: .github/ct.yaml
 
   lint-docs:
     runs-on: ubuntu-latest

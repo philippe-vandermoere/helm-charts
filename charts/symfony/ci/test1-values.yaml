@@ -1,0 +1,12 @@
+# define global image
+image:
+  repository: php
+  tag: 8-0-alpine
+  imagePullPolicy: IfNotPresent
+
+web:
+  nginx:
+    image:
+      repository: nginx
+      tag: stable-alpine
+      imagePullPolicy: IfNotPresent
