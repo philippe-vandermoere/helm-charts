@@ -30,7 +30,7 @@ jobs:
           version: v3.3.1
 
       - name: Run chart-testing (lint)
-        run: ct lint --all
+        run: ct lint --all --validate-maintainers=false
 
   lint_docs:
     name: Check if Charts Documentation is up do date
