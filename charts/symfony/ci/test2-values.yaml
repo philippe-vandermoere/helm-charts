@@ -3,7 +3,7 @@ crons:
   - name: cron1
     enabled: true
     schedule: "* * * * *"
-    command: cron1
+    command: echo 'cron 1'
     image:
       repository: php
       tag: 8.0-alpine
@@ -11,7 +11,7 @@ crons:
   - name: cron2
     enabled: true
     schedule: "* * * * *"
-    command: cron2
+    command: echo 'cron 2'
     image:
       repository: php
       tag: 8.0-alpine
@@ -20,7 +20,7 @@ crons:
 migrations:
   - name: migration1
     enabled: true
-    command: migration1
+    command: php -r 'phpinfo();'
     image:
       repository: php
       tag: 8.0-alpine
@@ -42,7 +42,7 @@ workers:
   - name: worker1
     enabled: true
     replica: 1
-    command: worker1
+    command: while true; do echo 'worker 1'; sleep 10; done
     image:
       repository: php
       tag: 8.0-alpine
@@ -50,7 +50,7 @@ workers:
   - name: worker2
     enabled: true
     replica: 1
-    command: worker2
+    command: while true; do echo 'worker 2'; sleep 10; done
     image:
       repository: php
       tag: 8.0-alpine
