@@ -86,4 +86,4 @@ jobs:
           node_image: kindest/node:${{ matrix.k8s }}
 
       - name: Run chart-testing (install)
-        run: ct install --all --helm-extra-args "--timeout 60" --build-id ${GITHUB_RUN_ID}
+        run: ct install --all
