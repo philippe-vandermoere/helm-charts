@@ -1,0 +1,136 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "symfony.fullname" . }}-web
+  labels:
+    {{- include "symfony.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  selector:
+    matchLabels:
+      {{- include "symfony.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web
+  replicas: {{ .Values.web.replica }}
+  template:
+    metadata:
+      labels:
+        {{- include "symfony.labels" . | nindent 8 }}
+        app.kubernetes.io/component: web
+      annotations:
+        checksum/secret.env: {{ include "symfony.secret.env" (dict "context" .Values.web.php "global" .) | sha256sum }}
+    spec:
+      initContainers: {{- include "symfony.initContainers.waiting" . | nindent 8 }}
+      containers:
+        - name: nginx
+          image: {{ .Values.web.nginx.image.repository }}:{{ .Values.web.nginx.image.tag }}
+          imagePullPolicy: {{ .Values.web.nginx.image.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.web.nginx.port }}
+        {{- if .Values.web.nginx.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.web.nginx.port }}
+            periodSeconds: {{ .Values.web.nginx.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.nginx.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.web.nginx.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.web.nginx.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.web.nginx.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.web.nginx.port }}
+            initialDelaySeconds: {{ .Values.web.nginx.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.web.nginx.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.nginx.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.web.nginx.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.web.nginx.readinessProbe.failureThreshold }}
+        {{- end }}
+          resources: {{- toYaml .Values.web.nginx.resources | nindent 12 }}
+        - name: php
+        {{- if and .Values.web.php.image }}
+          image: {{ .Values.web.php.image.repository }}:{{ .Values.web.php.image.tag }}
+          imagePullPolicy: {{ .Values.web.php.image.imagePullPolicy }}
+        {{- else }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy }}
+        {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "symfony.fullname" . }}-web
+        {{- if .Values.web.php.livenessProbe.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - php-fpm-healthcheck
+            initialDelaySeconds: {{ .Values.web.php.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.web.php.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.php.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.web.php.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.web.php.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.web.php.readinessProbe.enabled }}
+          readinessProbe:
+            exec:
+              command:
+                - php-fpm-healthcheck
+                - '--listen-queue={{ .Values.web.php.readinessProbe.listenQueue }}'
+            initialDelaySeconds: {{ .Values.web.php.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.web.php.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.web.php.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.web.php.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.web.php.readinessProbe.failureThreshold }}
+        {{- end }}
+          resources: {{- toYaml .Values.web.php.resources | nindent 12 }}
+      {{- if .Values.metrics.enabled }}
+        - name: nginx-metrics
+          image: {{ .Values.metrics.nginx.image.repository }}:{{ .Values.metrics.nginx.image.tag }}
+          imagePullPolicy: {{ .Values.metrics.nginx.image.imagePullPolicy }}
+          args:
+            - '-nginx.scrape-uri'
+            - '{{ .Values.metrics.nginx.statusUrl }}'
+            - '-web.listen-address'
+            - ':{{ .Values.metrics.nginx.port }}'
+            - '-web.telemetry-path'
+            - '{{ .Values.metrics.nginx.path }}'
+          ports:
+            - containerPort: {{ .Values.metrics.nginx.port }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metrics.nginx.path }}
+              port: {{ .Values.metrics.nginx.port }}
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metrics.nginx.path }}
+              port: {{ .Values.metrics.nginx.port }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources: {{- toYaml .Values.metrics.nginx.resources | nindent 12 }}
+        - name: php-metrics
+          image: {{ .Values.metrics.php.image.repository }}:{{ .Values.metrics.php.image.tag }}
+          imagePullPolicy: {{ .Values.metrics.php.image.imagePullPolicy }}
+          args:
+            - '--addr'
+            - ':{{ .Values.metrics.php.port }}'
+            - '--fastcgi'
+            - '{{ .Values.metrics.php.statusUrl }}'
+            - '--web.telemetry-path'
+            - '{{ .Values.metrics.php.path }}'
+          ports:
+            - containerPort: {{ .Values.metrics.php.port }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.metrics.php.path }}
+              port: {{ .Values.metrics.php.port }}
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.metrics.php.path }}
+              port: {{ .Values.metrics.php.port }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          resources: {{- toYaml .Values.metrics.php.resources | nindent 12 }}
+      {{- end }}

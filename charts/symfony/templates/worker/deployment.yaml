@@ -1,0 +1,46 @@
+{{- range .Values.workers }}
+{{- if .enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "symfony.fullname" $ }}-worker-{{ .name }}
+  labels:
+    {{- include "symfony.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: worker-{{ .name }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "symfony.matchLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: worker-{{ .name }}
+  replicas: {{ .replica }}
+  template:
+    metadata:
+      labels:
+        {{- include "symfony.labels" $ | nindent 8 }}
+        app.kubernetes.io/component: worker-{{ .name }}
+      annotations:
+        checksum/secret.env: {{ include "symfony.secret.env" (dict "context" . "global" $) | sha256sum }}
+    spec:
+      initContainers: {{- include "symfony.initContainers.waiting" $ | nindent 8 }}
+      containers:
+        - name: {{ .name }}
+        {{- if .image }}
+          image: {{ .image.repository }}:{{ .image.tag }}
+          imagePullPolicy: {{ .image.imagePullPolicy }}
+        {{- else }}
+          image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
+          imagePullPolicy:  {{ $.Values.image.imagePullPolicy }}
+        {{- end }}
+          command: ['/bin/sh']
+          args:
+            - '-c'
+            - {{ .command }}
+          envFrom:
+            - secretRef:
+                name: {{ include "symfony.fullname" $ }}-worker-{{ .name }}
+        {{- if .resources }}
+          resources: {{- toYaml .resources | nindent 12 }}
+        {{- end }}
+{{- end }}
+{{- end }}

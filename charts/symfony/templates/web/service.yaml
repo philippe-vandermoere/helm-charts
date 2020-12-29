@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "symfony.fullname" . }}-web
+  labels:
+    {{- include "symfony.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.web.service.port }}
+      targetPort: {{ .Values.web.nginx.port }}
+  {{- if .Values.metrics.enabled }}
+    - name: nginx-metrics
+      port: {{ .Values.metrics.nginx.port }}
+      targetPort: {{ .Values.metrics.nginx.port }}
+    - name: php-metrics
+      port: {{ .Values.metrics.php.port }}
+      targetPort: {{ .Values.metrics.php.port }}
+  {{- end }}
+  selector:
+    {{- include "symfony.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web

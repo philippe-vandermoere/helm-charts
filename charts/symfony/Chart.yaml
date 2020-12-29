@@ -1,0 +1,21 @@
+apiVersion: v2
+appVersion: 5.2.0
+description: Chart for PHP Symfony application
+engine: gotpl
+home: https://github.com/philippe-vandermoere/charts/tree/master/charts/symfony
+icon: https://symfony.com/images/logos/header-logo.svg
+keywords:
+  - symfony
+  - php
+  - nginx
+kubeVersion: ">=1.18.0"
+maintainers:
+  - email: vandermoere.philippe@gmail.com
+    name: Philippe VANDERMOERE
+name: symfony
+sources:
+  - https://hub.docker.com/_/php
+  - https://hub.docker.com/_/nginx
+  - https://github.com/symfony/symfony
+type: application
+version: 1.0.0

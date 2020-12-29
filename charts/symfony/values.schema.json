@@ -1,0 +1,376 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Values",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "env",
+    "web",
+    "workers",
+    "crons",
+    "migrations"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "image": {
+      "$ref": "#/definitions/image"
+    },
+    "env": {
+      "$ref": "#/definitions/environment_variable"
+    },
+    "web": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "replica",
+        "service",
+        "nginx"
+      ],
+      "properties": {
+        "replica": {
+          "$ref": "#/definitions/replica"
+        },
+        "service": {
+          "$ref": "#/definitions/service"
+        },
+        "nginx": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "port",
+            "livenessProbe",
+            "readinessProbe",
+            "resources"
+          ],
+          "properties": {
+            "port": {
+              "$ref": "#/definitions/port"
+            },
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "livenessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "readinessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "resources": {
+              "$ref": "#/definitions/resources"
+            }
+          }
+        },
+        "php": {
+          "type": "object",
+          "required": [
+            "livenessProbe",
+            "readinessProbe",
+            "resources"
+          ],
+          "properties": {
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "livenessProbe": {
+              "$ref": "#/definitions/probe"
+            },
+            "readinessProbe": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/probe"
+                },
+                {
+                  "required": [
+                    "listenQueue"
+                  ],
+                  "properties": {
+                    "listenQueue": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              ]
+            },
+            "resources": {
+              "$ref": "#/definitions/resources"
+            }
+          }
+        }
+      }
+    },
+    "workers": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/command"
+          },
+          {
+            "required": [
+              "replica"
+            ],
+            "properties": {
+              "replica": {
+                "$ref": "#/definitions/replica"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "crons": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/command"
+          },
+          {
+            "required": [
+              "schedule"
+            ],
+            "properties": {
+              "schedule": {
+                "type": "string"
+              },
+              "concurrencyPolicy": {
+                "type": "string",
+                "enum": [
+                  "Allow",
+                  "Forbid",
+                  "Replace"
+                ]
+              },
+              "restartPolicy": {
+                "$ref": "#/definitions/restartPolicy"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/command"
+          },
+          {
+            "required": [],
+            "properties": {
+              "timeout": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 300
+              },
+              "backoffLimit": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "restartPolicy": {
+                "$ref": "#/definitions/restartPolicy"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": [],
+      "properties": {
+
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timeout",
+        "image",
+        "services"
+      ],
+      "properties": {
+        "timeout": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "image": {
+          "$ref": "#/definitions/image"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "host",
+              "port"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "host": {
+                "type": "string",
+                "minLength": 1
+              },
+              "port": {
+                "$ref": "#/definitions/port"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "tag",
+        "imagePullPolicy"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "imagePullPolicy": {
+          "type": "string"
+        }
+      }
+    },
+    "environment_variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "patternProperties": {
+        "^[A-Z0-9_]+": {
+          "type": "string"
+        }
+      }
+    },
+    "service": {
+      "type": "object"
+    },
+    "port": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "probe": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "successThreshold": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "cpu": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "requests": {
+          "$ref": "#/definitions/resource"
+        },
+        "limits": {
+          "$ref": "#/definitions/resource"
+        }
+      }
+    },
+    "cmd": {
+      "type": "string",
+      "minimum": 1
+    },
+    "command": {
+      "type": "object",
+      "required": [
+        "name",
+        "enabled",
+        "command"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minimum": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "command": {
+          "$ref": "#/definitions/cmd"
+        },
+        "image": {
+          "$ref": "#/definitions/image"
+        },
+        "env": {
+          "$ref": "#/definitions/environment_variable"
+        },
+        "resources": {
+          "$ref": "#/definitions/resources"
+        }
+      }
+    },
+    "restartPolicy": {
+      "type": "string",
+      "enum": [
+        "Always",
+        "OnFailure",
+        "Never"
+      ]
+    },
+    "replica": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

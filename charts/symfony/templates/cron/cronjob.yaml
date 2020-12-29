@@ -1,0 +1,46 @@
+{{- range .Values.crons }}
+{{- if .enabled }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "symfony.fullname" $ }}-cron-{{ .name }}
+  labels:
+    {{- include "symfony.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: cron-{{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  concurrencyPolicy: {{ .concurrencyPolicy | default "Forbid" }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "symfony.labels" $ | nindent 12 }}
+            app.kubernetes.io/component: cron-{{ .name }}
+          annotations:
+            checksum/secret.env: {{ include "symfony.secret.env" (dict "context" . "global" $) | sha256sum }}
+        spec:
+          restartPolicy: {{ .restartPolicy | default "OnFailure" }}
+          initContainers: {{- include "symfony.initContainers.waiting" $ | nindent 12 }}
+          containers:
+            - name: {{ .name }}
+            {{- if .image }}
+              image: {{ .image.repository }}:{{ .image.tag }}
+              imagePullPolicy: {{ .image.imagePullPolicy }}
+            {{- else }}
+              image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
+              imagePullPolicy: {{ $.Values.image.imagePullPolicy }}
+            {{- end }}
+              command: ['/bin/sh']
+              args:
+                - '-c'
+                - {{ .command }}
+              envFrom:
+                - secretRef:
+                    name: {{ include "symfony.fullname" $ }}-cron-{{ .name }}
+            {{- if .resources }}
+              resources: {{- toYaml .resources | nindent 12 }}
+            {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,21 @@
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "symfony.fullname" . }}-web
+  namespace: {{ .Values.metrics.serviceMonitor.mamespace }}
+  labels: {{- include "symfony.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "symfony.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web
+  endpoints:
+    - port: nginx-metrics
+      path: {{ .Values.metrics.nginx.path }}
+    - port: php-metrics
+      path: {{ .Values.metrics.php.path }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+{{- end }}
