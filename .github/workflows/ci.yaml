@@ -12,15 +12,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.4.0
-      - name: Run chart-testing (lint)
+
+      - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.0.1
         with:
-          command: lint
           version: v3.3.1
+
+      - name: Run chart-testing (lint)
+        run: ct lint --all
 
   lint_docs:
     name: Check if Charts Documentation is up do date
@@ -28,8 +38,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Run helm-docs
         uses: 'docker://jnorwood/helm-docs:v1.4.0'
+
       - name: check if docs is up do date
         run: git diff --exit-code
 
@@ -48,16 +60,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.4.0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.0.1
+        with:
+          version: v3.3.1
+
       - name: Create kind ${{ matrix.k8s }} cluster
         uses: helm/kind-action@v1.1.0
         with:
           node_image: kindest/node:${{ matrix.k8s }}
+
       - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v2.0.1
-        with:
-          command: install
-          version: v3.3.1
+        run: ct install --all
