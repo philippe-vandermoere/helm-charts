@@ -182,9 +182,86 @@
     },
     "metrics": {
       "type": "object",
-      "required": [],
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "serviceMonitor"
+      ],
       "properties": {
-
+        "enabled": {
+          "type": "boolean"
+        },
+        "serviceMonitor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          }
+        },
+        "nginx": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "statusUrl",
+            "port",
+            "path",
+            "image",
+            "resources"
+          ],
+          "properties": {
+            "statusUrl": {
+              "type": "string"
+            },
+            "port": {
+              "$ref": "#/definitions/port"
+            },
+            "path": {
+              "type": "string"
+            },
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "resources": {
+              "$ref": "#/definitions/resources"
+            }
+          }
+        },
+        "php": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "statusUrl",
+            "port",
+            "path",
+            "image",
+            "resources"
+          ],
+          "properties": {
+            "statusUrl": {
+              "type": "string"
+            },
+            "port": {
+              "$ref": "#/definitions/port"
+            },
+            "path": {
+              "type": "string"
+            },
+            "image": {
+              "$ref": "#/definitions/image"
+            },
+            "resources": {
+              "$ref": "#/definitions/resources"
+            }
+          }
+        }
       }
     },
     "dependencies": {
@@ -268,7 +345,70 @@
       }
     },
     "service": {
-      "type": "object"
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "port"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["ClusterIP"]
+            },
+            "port": {
+              "$ref": "#/definitions/port"
+            },
+            "clusterIP": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "nodePort"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["NodePort"]
+            },
+            "nodePort": {
+              "$ref": "#/definitions/port"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["LoadBalancer"]
+            },
+            "loadBalancerIP": {
+              "type": "string"
+            },
+            "loadBalancerSourceRanges": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nodePort": {
+              "$ref": "#/definitions/port"
+            }
+          }
+        }
+      ]
     },
     "port": {
       "type": "integer",

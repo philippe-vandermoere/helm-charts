@@ -51,7 +51,7 @@ Kubernetes: `>=1.18.0`
 | metrics.php.resources.requests | object | `{}` |  |
 | metrics.php.statusUrl | string | `"tcp://127.0.0.1:9000/status"` |  |
 | metrics.serviceMonitor.enabled | bool | `false` |  |
-| metrics.serviceMonitor.mamespace | string | `"prometheus"` |  |
+| metrics.serviceMonitor.namespace | string | `"prometheus"` |  |
 | migrations | list | `[]` |  |
 | web.nginx.livenessProbe.enabled | bool | `true` |  |
 | web.nginx.livenessProbe.failureThreshold | int | `6` |  |
@@ -83,7 +83,7 @@ Kubernetes: `>=1.18.0`
 | web.php.readinessProbe.timeoutSeconds | int | `3` |  |
 | web.php.resources.limits | object | `{}` |  |
 | web.php.resources.requests | object | `{}` |  |
-| web.replica | int | `3` |  |
+| web.replica | int | `3` | Number of web pods. |
 | web.service.port | int | `80` |  |
 | web.service.type | string | `"ClusterIP"` |  |
 | workers | list | `[]` |  |

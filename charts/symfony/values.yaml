@@ -1,3 +1,4 @@
+# -- Version of application
 # version: 1.0.0
 # image:
 #  repository: php
@@ -12,6 +13,16 @@ web:
   service:
     type: ClusterIP
     port: 80
+#    clusterIP: 10.10.10.10
+#
+#    type: LoadBalancer
+#    loadBalancerIP: 10.10.10.10
+#    loadBalancerSourceRanges:
+#      - "10.10.10.10/8"
+#    nodePort: 8080
+#
+#    type: NodePort
+#    nodePort: 8080
   nginx:
     port: 80
 #    image:
@@ -76,6 +87,7 @@ workers: []
 #      requests: {}
 #      limits: {}
 
+# --
 crons: []
 #  - name: test
 #    enabled: true
@@ -111,8 +123,8 @@ migrations: []
 metrics:
   enabled: true
   serviceMonitor:
-    mamespace: prometheus
     enabled: false
+    namespace: prometheus
   nginx:
     statusUrl: http://127.0.0.1:80/status
     port: 9113

@@ -8,10 +8,22 @@ metadata:
     app.kubernetes.io/component: web
 spec:
   type: {{ .Values.web.service.type }}
+{{- if and (eq .Values.web.service.type "ClusterIP") .Values.web.service.clusterIP }}
+  clusterIP: {{ .Values.web.service.clusterIP }}
+{{- end}}
+{{- if and (eq .Values.web.service.type "LoadBalancer") .Values.web.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.web.service.loadBalancerIP }}
+{{- end}}
+{{- if and (eq .Values.web.service.type "LoadBalancer") .Values.web.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.web.service.loadBalancerSourceRanges | nindent 4 }}
+{{- end}}
   ports:
     - name: http
       port: {{ .Values.web.service.port }}
       targetPort: {{ .Values.web.nginx.port }}
+    {{- if and (or (eq .Values.web.service.type "LoadBalancer") (eq .Values.web.service.type "NodePort")) .Values.web.service.nodePort }}
+       nodePort: {{ .Values.web.service.nodePort }}
+    {{- end }}
   {{- if .Values.metrics.enabled }}
     - name: nginx-metrics
       port: {{ .Values.metrics.nginx.port }}
