@@ -1,0 +1,13 @@
+# define version
+version: 1.0.0
+image:
+  repository: philippev/helmchart-php
+  tag: latest
+  imagePullPolicy: IfNotPresent
+
+web:
+  nginx:
+    image:
+      repository: philippev/helmchart-nginx
+      tag: latest
+      imagePullPolicy: IfNotPresent

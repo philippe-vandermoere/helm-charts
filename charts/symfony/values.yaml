@@ -1,0 +1,160 @@
+# -- Version of application
+# version: 1.0.0
+# image:
+#  repository: php
+#  tag: 8.0-alpine
+#  imagePullPolicy: IfNotPresent
+
+env: {}
+#  TIMEZONE: utc
+
+web:
+  replica: 3
+  service:
+    type: ClusterIP
+    port: 80
+#    clusterIP: 10.10.10.10
+#
+#    type: LoadBalancer
+#    loadBalancerIP: 10.10.10.10
+#    loadBalancerSourceRanges:
+#      - "10.10.10.10/8"
+#    nodePort: 8080
+#
+#    type: NodePort
+#    nodePort: 8080
+  nginx:
+    port: 80
+#    image:
+#      repository: nginx
+#      tag: stable-alpine
+#      imagePullPolicy: IfNotPresent
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
+      periodSeconds: 10
+      failureThreshold: 6
+      successThreshold: 1
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
+      timeoutSeconds: 3
+      periodSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+    resources:
+      requests: {}
+      limits: {}
+  php:
+#    image:
+#      repository: php
+#      tag: 8.0-alpine
+#      imagePullPolicy: IfNotPresent
+#    env:
+#      TIMEZONE: utc
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
+      periodSeconds: 10
+      failureThreshold: 6
+      successThreshold: 1
+    readinessProbe:
+      enabled: true
+      listenQueue: 10
+      initialDelaySeconds: 5
+      timeoutSeconds: 3
+      periodSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+    resources:
+      requests: {}
+      limits: {}
+
+workers: []
+#  - name: messenger
+#    enabled: true
+#    replica: 3
+#    command: bin/console messenger:consume --memory-limit=128M --time-limit=600
+#    image:
+#      repository: php
+#      tag: 8.0-alpine
+#      imagePullPolicy: IfNotPresent
+#    env:
+#      TIMEZONE: utc
+#    resources:
+#      requests: {}
+#      limits: {}
+
+# --
+crons: []
+#  - name: test
+#    enabled: true
+#    schedule: "* * * * *"
+#    command: bin/console doctrine:query:sql 'SELECT 1;'
+#    image:
+#      repository: php
+#      tag: 8.0-alpine
+#      imagePullPolicy: IfNotPresent
+#    env:
+#      TIMEZONE: utc
+#    resources:
+#      requests: {}
+#      limits: {}
+
+migrations: []
+#  - name: doctrine
+#    enabled: true
+#    command: bin/console doctrine:migrations:migrate --allow-no-migration --no-interaction
+#    image:
+#      repository: php
+#      tag: 8.0-alpine
+#      imagePullPolicy: IfNotPresent
+#    env:
+#      TIMEZONE: utc
+#    resources:
+#      requests: {}
+#      limits: {}
+#    timeout: 60
+#    restartPolicy: Never
+#    backoffLimit: 0
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false
+    namespace: prometheus
+  nginx:
+    statusUrl: http://127.0.0.1:80/status
+    port: 9113
+    path: /metrics
+    image:
+      repository: nginx/nginx-prometheus-exporter
+      tag: 0.8.0
+      imagePullPolicy: IfNotPresent
+    resources:
+      requests: {}
+      limits: {}
+  php:
+    statusUrl: tcp://127.0.0.1:9000/status
+    port: 9114
+    path: /metrics
+    image:
+      repository: bakins/php-fpm-exporter
+      tag: v0.6.1
+      imagePullPolicy: IfNotPresent
+    resources:
+      requests: {}
+      limits: {}
+
+dependencies:
+  timeout: 20
+  image:
+    repository: busybox
+    tag: 1.32.0
+    imagePullPolicy: IfNotPresent
+  services: []
+#    - name: mysql
+#      host: mysql
+#      port: 3306
