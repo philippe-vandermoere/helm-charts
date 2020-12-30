@@ -46,7 +46,7 @@ jobs:
         run: git diff --exit-code
 
   install_chart:
-    name: install-chart
+    name: Check Chart installation
     runs-on: ubuntu-latest
     needs:
       - lint_chart
