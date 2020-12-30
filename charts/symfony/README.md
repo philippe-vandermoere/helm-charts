@@ -83,7 +83,7 @@ Kubernetes: `>=1.18.0`
 | web.php.readinessProbe.timeoutSeconds | int | `3` |  |
 | web.php.resources.limits | object | `{}` |  |
 | web.php.resources.requests | object | `{}` |  |
-| web.replica | int | `3` | Number of web pods. |
+| web.replica | int | `3` |  |
 | web.service.port | int | `80` |  |
 | web.service.type | string | `"ClusterIP"` |  |
 | workers | list | `[]` |  |
