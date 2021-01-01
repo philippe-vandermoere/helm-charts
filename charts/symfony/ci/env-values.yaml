@@ -1,10 +1,3 @@
-# define env
-
-image:
-  repository: philippev/helmchart-php
-  tag: latest
-  imagePullPolicy: IfNotPresent
-
 env:
   AA: "11"
   BB: "22"
@@ -12,7 +5,6 @@ env:
 
 crons:
   - name: cron1
-    enabled: true
     schedule: "* * * * *"
     command: echo 'cron 1'
     env:
@@ -23,29 +15,22 @@ crons:
 
 migrations:
   - name: migration1
-    enabled: true
     command: php -r 'phpinfo();'
     env:
       DD: "33"
+
 web:
-  php:
+  phpfpm:
     env:
       BB: "88"
       DD: "33"
-  nginx:
-    image:
-      repository: philippev/helmchart-nginx
-      tag: latest
-      imagePullPolicy: IfNotPresent
 
 workers:
   - name: worker1
-    enabled: true
     replica: 1
     command: while true; do echo 'worker 1'; sleep 10; done
     env:
       EE: "66"
   - name: worker2
-    enabled: true
     replica: 1
     command: while true; do echo 'worker 2'; sleep 10; done

@@ -32,25 +32,11 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --all --validate-maintainers=false
 
-  lint_docs:
-    name: Check if Charts Documentation is up do date
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Run helm-docs
-        uses: 'docker://jnorwood/helm-docs:v1.4.0'
-
-      - name: check if docs is up do date
-        run: git diff --exit-code
-
   install_chart:
     name: Check Chart installation
     runs-on: ubuntu-latest
     needs:
       - lint_chart
-      - lint_docs
     strategy:
       matrix:
         k8s:

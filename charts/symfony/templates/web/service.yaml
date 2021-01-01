@@ -1,3 +1,4 @@
+{{- if .Values.web.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -28,10 +29,11 @@ spec:
     - name: nginx-metrics
       port: {{ .Values.metrics.nginx.port }}
       targetPort: {{ .Values.metrics.nginx.port }}
-    - name: php-metrics
-      port: {{ .Values.metrics.php.port }}
-      targetPort: {{ .Values.metrics.php.port }}
+    - name: phpfpm-metrics
+      port: {{ .Values.metrics.phpfpm.port }}
+      targetPort: {{ .Values.metrics.phpfpm.port }}
   {{- end }}
   selector:
     {{- include "symfony.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: web
+{{- end }}

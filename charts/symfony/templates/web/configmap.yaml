@@ -1,0 +1,17 @@
+{{- if .Values.web.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "symfony.fullname" . }}-web-nginx
+  labels:
+    {{- include "symfony.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+data:
+{{- if .Values.web.nginx.config.main }}
+  nginx.conf: {{ .Values.web.nginx.config.main | indent 4 }}
+{{- end }}
+{{- if .Values.web.nginx.config.serverBlock }}
+  default.conf: {{ .Values.web.nginx.config.serverBlock | indent 4 }}
+{{- end }}
+{{- end }}

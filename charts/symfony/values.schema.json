@@ -24,11 +24,16 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "enabled",
         "replica",
         "service",
-        "nginx"
+        "nginx",
+        "phpfpm"
       ],
       "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
         "replica": {
           "$ref": "#/definitions/replica"
         },
@@ -40,6 +45,8 @@
           "additionalProperties": false,
           "required": [
             "port",
+            "image",
+            "config",
             "livenessProbe",
             "readinessProbe",
             "resources"
@@ -50,6 +57,22 @@
             },
             "image": {
               "$ref": "#/definitions/image"
+            },
+            "config": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "main",
+                "serverBlock"
+              ],
+              "properties": {
+                "main": {
+                  "type": "string"
+                },
+                "serverBlock": {
+                  "type": "string"
+                }
+              }
             },
             "livenessProbe": {
               "$ref": "#/definitions/probe"
@@ -62,7 +85,7 @@
             }
           }
         },
-        "php": {
+        "phpfpm": {
           "type": "object",
           "required": [
             "livenessProbe",
@@ -73,26 +96,14 @@
             "image": {
               "$ref": "#/definitions/image"
             },
+            "env": {
+              "$ref": "#/definitions/environment_variable"
+            },
             "livenessProbe": {
               "$ref": "#/definitions/probe"
             },
             "readinessProbe": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/probe"
-                },
-                {
-                  "required": [
-                    "listenQueue"
-                  ],
-                  "properties": {
-                    "listenQueue": {
-                      "type": "integer",
-                      "minimum": 0
-                    }
-                  }
-                }
-              ]
+              "$ref": "#/definitions/probe"
             },
             "resources": {
               "$ref": "#/definitions/resources"
@@ -234,7 +245,7 @@
             }
           }
         },
-        "php": {
+        "phpfpm": {
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -315,7 +326,7 @@
       "required": [
         "repository",
         "tag",
-        "imagePullPolicy"
+        "pullPolicy"
       ],
       "properties": {
         "repository": {
@@ -324,7 +335,7 @@
         "tag": {
           "type": "string"
         },
-        "imagePullPolicy": {
+        "pullPolicy": {
           "type": "string",
           "enum": [
             "IfNotPresent",
@@ -418,12 +429,13 @@
     "probe": {
       "type": "object",
       "required": [
-        "enabled"
+        "initialDelaySeconds",
+        "timeoutSeconds",
+        "periodSeconds",
+        "failureThreshold",
+        "successThreshold"
       ],
       "properties": {
-        "enabled": {
-          "type": "boolean"
-        },
         "initialDelaySeconds": {
           "type": "integer",
           "minimum": 0
@@ -480,7 +492,6 @@
       "type": "object",
       "required": [
         "name",
-        "enabled",
         "command"
       ],
       "properties": {
