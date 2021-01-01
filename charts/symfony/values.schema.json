@@ -78,13 +78,19 @@
               "$ref": "#/definitions/probe"
             },
             "customLivenessProbe": {
-              "type": "object"
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
             },
             "readinessProbe": {
               "$ref": "#/definitions/probe"
             },
             "customReadinessProbe": {
-              "type": "object"
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
             },
             "resources": {
               "$ref": "#/definitions/resources"
@@ -109,13 +115,19 @@
               "$ref": "#/definitions/probe"
             },
             "customLivenessProbe": {
-              "type": "object"
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
             },
             "readinessProbe": {
               "$ref": "#/definitions/probe"
             },
             "customReadinessProbe": {
-              "type": "object"
+              "oneOf": [
+                {"type": "string"},
+                {"type": "object"}
+              ]
             },
             "resources": {
               "$ref": "#/definitions/resources"

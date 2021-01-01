@@ -1,14 +1,14 @@
 web:
   nginx:
-    customLivenessProbe:
+    customLivenessProbe: |-
       httpGet:
         host: 127.0.0.1
-        port: "{{ .Values.web.nginx.port }}"
+        port: {{ .Values.web.nginx.port }}
         path: /status
-    customReadinessProbe:
+    customReadinessProbe: |-
       httpGet:
         host: 127.0.0.1
-        port: "{{ .Values.web.nginx.port }}"
+        port: 80
         path: /status
   phpfpm:
     customLivenessProbe:
