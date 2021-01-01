@@ -18,6 +18,7 @@ migrations:
     command: php -r 'phpinfo();'
     env:
       DD: "33"
+
 web:
   phpfpm:
     env:
