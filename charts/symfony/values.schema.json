@@ -77,8 +77,14 @@
             "livenessProbe": {
               "$ref": "#/definitions/probe"
             },
+            "customLivenessProbe": {
+              "type": "object"
+            },
             "readinessProbe": {
               "$ref": "#/definitions/probe"
+            },
+            "customReadinessProbe": {
+              "type": "object"
             },
             "resources": {
               "$ref": "#/definitions/resources"
@@ -102,8 +108,14 @@
             "livenessProbe": {
               "$ref": "#/definitions/probe"
             },
+            "customLivenessProbe": {
+              "type": "object"
+            },
             "readinessProbe": {
               "$ref": "#/definitions/probe"
+            },
+            "customReadinessProbe": {
+              "type": "object"
             },
             "resources": {
               "$ref": "#/definitions/resources"
