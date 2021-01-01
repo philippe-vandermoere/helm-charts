@@ -73,7 +73,6 @@ Generate init container
 
 {{/*
 Generate secret for environment variables
-Usage:
 */}}
 {{- define "symfony.secret.env" -}}
 {{- $env := dict -}}
