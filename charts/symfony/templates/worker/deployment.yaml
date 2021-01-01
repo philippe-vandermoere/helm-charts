@@ -1,5 +1,5 @@
 {{- range .Values.workers }}
-{{- if .enabled }}
+{{- if .enabled | default true }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,10 +27,10 @@ spec:
         - name: {{ .name }}
         {{- if .image }}
           image: {{ .image.repository }}:{{ .image.tag }}
-          imagePullPolicy: {{ .image.imagePullPolicy }}
+          imagePullPolicy: {{ .image.pullPolicy }}
         {{- else }}
           image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
-          imagePullPolicy:  {{ $.Values.image.imagePullPolicy }}
+          imagePullPolicy:  {{ $.Values.image.pullPolicy }}
         {{- end }}
           command: ['/bin/sh']
           args:

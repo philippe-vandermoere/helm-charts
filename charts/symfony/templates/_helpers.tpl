@@ -36,7 +36,9 @@ Common labels.
 app.kubernetes.io/name: {{ include "symfony.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/version: {{ .Values.version | default .Chart.AppVersion }}
+{{- if .Values.version }}
+app.kubernetes.io/version: {{ .Values.version }}
+{{- end }}
 helm.sh/chart: {{ include "symfony.chart" . }}
 {{- end -}}
 
@@ -50,11 +52,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{/*
 Generate init container
-*/}}{{- define "symfony.initContainers.waiting" -}}
+*/}}
+{{- define "symfony.initContainers.waiting" -}}
 {{- $timeout := .Values.dependencies.timeout -}}
 {{- $imageRepository := .Values.dependencies.image.repository -}}
 {{- $imageTag := .Values.dependencies.image.tag -}}
-{{- $imagePolicy := .Values.dependencies.image.imagePullPolicy -}}
+{{- $imagePolicy := .Values.dependencies.image.pullPolicy -}}
 {{- range .Values.dependencies.services }}
 - name: waiting-{{ .name }}
   image: {{ $imageRepository }}:{{ $imageTag }}

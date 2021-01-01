@@ -1,20 +1,21 @@
-# -- Version of application
-# version: 1.0.0
-# image:
-#  repository: php
-#  tag: 8.0-alpine
-#  imagePullPolicy: IfNotPresent
+version: ""
+
+image:
+  repository: php
+  tag: 8.0-fpm-alpine
+  pullPolicy: IfNotPresent
 
 env: {}
 #  TIMEZONE: utc
 
 web:
+  enabled: true
   replica: 3
   service:
     type: ClusterIP
     port: 80
-#    clusterIP: 10.10.10.10
-#
+    clusterIP: ""
+
 #    type: LoadBalancer
 #    loadBalancerIP: 10.10.10.10
 #    loadBalancerSourceRanges:
@@ -23,21 +24,88 @@ web:
 #
 #    type: NodePort
 #    nodePort: 8080
+
   nginx:
     port: 80
-#    image:
-#      repository: nginx
-#      tag: stable-alpine
-#      imagePullPolicy: IfNotPresent
+    image:
+      repository: nginx
+      tag: stable-alpine
+      pullPolicy: IfNotPresent
+    config:
+      main: |-
+        user nginx;
+        worker_processes auto;
+        pid /var/run/nginx.pid;
+
+        events {
+            worker_connections 1024;
+        }
+
+        http {
+            server_tokens off;
+
+            sendfile on;
+            tcp_nopush on;
+            tcp_nodelay on;
+
+            keepalive_requests 100;
+            keepalive_timeout 65;
+
+            include /etc/nginx/mime.types;
+            default_type application/octet-stream;
+
+            map $http_x_request_id $request_uid {
+                default   $http_x_request_id;
+                ""        $request_id;
+            }
+
+            log_format main '$remote_addr - [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" $request_time $request_uid';
+
+            access_log /var/log/nginx/access.log main;
+            error_log /var/log/nginx/error.log error;
+
+            include /etc/nginx/conf.d/*.conf;
+        }
+
+      serverBlock: |-
+        server {
+            root /var/www/html/public;
+
+            add_header X-Request-Id $request_uid;
+
+            location / {
+                try_files $uri /index.php$is_args$args;
+            }
+
+             location ~ ^/index\.php(/|$) {
+                fastcgi_pass 127.0.0.1:9000;
+                include fastcgi_params;
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                fastcgi_param HTTP_X_REQUEST_ID $request_uid;
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+                internal;
+            }
+
+            location ~ \.php$ {
+                return 404;
+            }
+
+            location /status {
+                access_log off;
+                stub_status on;
+                allow 127.0.0.1;
+                deny all;
+            }
+        }
+
     livenessProbe:
-      enabled: true
-      initialDelaySeconds: 30
+      initialDelaySeconds: 5
       timeoutSeconds: 5
       periodSeconds: 10
       failureThreshold: 6
       successThreshold: 1
     readinessProbe:
-      enabled: true
       initialDelaySeconds: 5
       timeoutSeconds: 3
       periodSeconds: 5
@@ -46,23 +114,19 @@ web:
     resources:
       requests: {}
       limits: {}
-  php:
+  phpfpm:
 #    image:
 #      repository: php
 #      tag: 8.0-alpine
-#      imagePullPolicy: IfNotPresent
-#    env:
-#      TIMEZONE: utc
+#      pullPolicy: IfNotPresent
+    env: {}
     livenessProbe:
-      enabled: true
-      initialDelaySeconds: 30
+      initialDelaySeconds: 5
       timeoutSeconds: 5
       periodSeconds: 10
       failureThreshold: 6
       successThreshold: 1
     readinessProbe:
-      enabled: true
-      listenQueue: 10
       initialDelaySeconds: 5
       timeoutSeconds: 3
       periodSeconds: 5
@@ -76,18 +140,17 @@ workers: []
 #  - name: messenger
 #    enabled: true
 #    replica: 3
-#    command: bin/console messenger:consume --memory-limit=128M --time-limit=600
+#    command: bin/console messenger:consume --memory-limit=128M --time-limit=3600
 #    image:
 #      repository: php
 #      tag: 8.0-alpine
-#      imagePullPolicy: IfNotPresent
+#      pullPolicy: IfNotPresent
 #    env:
 #      TIMEZONE: utc
 #    resources:
 #      requests: {}
 #      limits: {}
 
-# --
 crons: []
 #  - name: test
 #    enabled: true
@@ -96,7 +159,7 @@ crons: []
 #    image:
 #      repository: php
 #      tag: 8.0-alpine
-#      imagePullPolicy: IfNotPresent
+#      pullPolicy: IfNotPresent
 #    env:
 #      TIMEZONE: utc
 #    resources:
@@ -110,7 +173,7 @@ migrations: []
 #    image:
 #      repository: php
 #      tag: 8.0-alpine
-#      imagePullPolicy: IfNotPresent
+#      pullPolicy: IfNotPresent
 #    env:
 #      TIMEZONE: utc
 #    resources:
@@ -121,7 +184,7 @@ migrations: []
 #    backoffLimit: 0
 
 metrics:
-  enabled: true
+  enabled: false
   serviceMonitor:
     enabled: false
     namespace: prometheus
@@ -132,18 +195,18 @@ metrics:
     image:
       repository: nginx/nginx-prometheus-exporter
       tag: 0.8.0
-      imagePullPolicy: IfNotPresent
+      pullPolicy: IfNotPresent
     resources:
       requests: {}
       limits: {}
-  php:
+  phpfpm:
     statusUrl: tcp://127.0.0.1:9000/status
     port: 9114
     path: /metrics
     image:
       repository: bakins/php-fpm-exporter
       tag: v0.6.1
-      imagePullPolicy: IfNotPresent
+      pullPolicy: IfNotPresent
     resources:
       requests: {}
       limits: {}
@@ -153,7 +216,7 @@ dependencies:
   image:
     repository: busybox
     tag: 1.32.0
-    imagePullPolicy: IfNotPresent
+    pullPolicy: IfNotPresent
   services: []
 #    - name: mysql
 #      host: mysql

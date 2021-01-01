@@ -1,4 +1,4 @@
-{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+{{- if and .Values.web.enabled .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -13,8 +13,8 @@ spec:
   endpoints:
     - port: nginx-metrics
       path: {{ .Values.metrics.nginx.path }}
-    - port: php-metrics
-      path: {{ .Values.metrics.php.path }}
+    - port: phpfpm-metrics
+      path: {{ .Values.metrics.phpfpm.path }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
