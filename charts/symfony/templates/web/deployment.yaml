@@ -40,6 +40,9 @@ spec:
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
           {{- end }}
+        {{- if .Values.web.nginx.customLivenessProbe }}
+          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customLivenessProbe "global" $) | nindent 12 }}
+        {{- else }}
           livenessProbe:
             tcpSocket:
               port: {{ .Values.web.nginx.port }}
@@ -47,6 +50,10 @@ spec:
             timeoutSeconds: {{ .Values.web.nginx.livenessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.web.nginx.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.web.nginx.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.web.nginx.customReadinessProbe }}
+          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customReadinessProbe "global" $) | nindent 12 }}
+        {{- else }}
           readinessProbe:
             tcpSocket:
               port: {{ .Values.web.nginx.port }}
@@ -55,6 +62,7 @@ spec:
             timeoutSeconds: {{ .Values.web.nginx.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.web.nginx.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.web.nginx.readinessProbe.failureThreshold }}
+        {{- end }}
           resources: {{- toYaml .Values.web.nginx.resources | nindent 12 }}
         - name: phpfpm
         {{- if and .Values.web.phpfpm.image }}
@@ -67,6 +75,9 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "symfony.fullname" . }}-web
+        {{- if .Values.web.phpfpm.customLivenessProbe }}
+          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customLivenessProbe "global" $) | nindent 12 }}
+        {{- else }}
           livenessProbe:
             tcpSocket:
               port: 9000
@@ -75,6 +86,10 @@ spec:
             timeoutSeconds: {{ .Values.web.phpfpm.livenessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.web.phpfpm.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.web.phpfpm.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.web.phpfpm.customReadinessProbe }}
+          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customReadinessProbe "global" $) | nindent 12 }}
+        {{- else }}
           readinessProbe:
             tcpSocket:
               port: 9000
@@ -83,6 +98,7 @@ spec:
             timeoutSeconds: {{ .Values.web.phpfpm.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.web.phpfpm.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.web.phpfpm.readinessProbe.failureThreshold }}
+        {{- end }}
           resources: {{- toYaml .Values.web.phpfpm.resources | nindent 12 }}
       {{- if .Values.metrics.enabled }}
         - name: nginx-metrics
