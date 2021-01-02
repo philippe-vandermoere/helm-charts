@@ -69,6 +69,8 @@ web:
 
       serverBlock: |-
         server {
+            listen {{ .Values.web.nginx.port }};
+
             root /var/www/html/public;
 
             add_header X-Request-Id $request_uid;
@@ -89,6 +91,11 @@ web:
 
             location ~ \.php$ {
                 return 404;
+            }
+
+            location /healthz {
+                access_log off;
+                return 200;
             }
 
             location /status {

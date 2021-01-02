@@ -84,3 +84,16 @@ Generate secret for environment variables
 {{ $key }}: {{ $value | b64enc | quote }}
 {{- end }}
 {{- end -}}
+
+{{/*
+Renders a value that contains template.
+Usage:
+{{ include "symfony.tplvalues.render" ( dict "value" .Values.path.to.the.Value "global" $) }}
+*/}}
+{{- define "symfony.tplvalues.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .global }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .global }}
+    {{- end }}
+{{- end -}}

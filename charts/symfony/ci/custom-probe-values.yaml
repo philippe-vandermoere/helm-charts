@@ -1,0 +1,17 @@
+web:
+  nginx:
+    customLivenessProbe: |-
+      httpGet:
+        port: {{ .Values.web.nginx.port }}
+        path: /healthz
+    customReadinessProbe: |-
+      httpGet:
+        port: {{ .Values.web.nginx.port }}
+        path: /healthz
+  phpfpm:
+    customLivenessProbe:
+      tcpSocket:
+        port: 9000
+    customReadinessProbe:
+      exec:
+        command: [ls]
