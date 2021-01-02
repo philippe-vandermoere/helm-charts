@@ -41,18 +41,19 @@ spec:
               subPath: default.conf
           {{- end }}
         {{- if .Values.web.nginx.customLivenessProbe }}
-          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customLivenessProbe "global" $) | nindent 12 }}
+          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customLivenessProbe "global" .) | nindent 12 }}
         {{- else }}
           livenessProbe:
-            tcpSocket:
-              port: {{ .Values.web.nginx.port }}
+            httpGet:
+              port: { { .Values.web.nginx.port } }
+              path: /healthz
             periodSeconds: {{ .Values.web.nginx.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.web.nginx.livenessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.web.nginx.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.web.nginx.livenessProbe.failureThreshold }}
         {{- end }}
         {{- if .Values.web.nginx.customReadinessProbe }}
-          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customReadinessProbe "global" $) | nindent 12 }}
+          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.customReadinessProbe "global" .) | nindent 12 }}
         {{- else }}
           readinessProbe:
             tcpSocket:
@@ -76,7 +77,7 @@ spec:
             - secretRef:
                 name: {{ include "symfony.fullname" . }}-web
         {{- if .Values.web.phpfpm.customLivenessProbe }}
-          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customLivenessProbe "global" $) | nindent 12 }}
+          livenessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customLivenessProbe "global" .) | nindent 12 }}
         {{- else }}
           livenessProbe:
             tcpSocket:
@@ -88,7 +89,7 @@ spec:
             failureThreshold: {{ .Values.web.phpfpm.livenessProbe.failureThreshold }}
         {{- end }}
         {{- if .Values.web.phpfpm.customReadinessProbe }}
-          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customReadinessProbe "global" $) | nindent 12 }}
+          readinessProbe: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.phpfpm.customReadinessProbe "global" .) | nindent 12 }}
         {{- else }}
           readinessProbe:
             tcpSocket:

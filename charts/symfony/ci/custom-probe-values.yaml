@@ -2,18 +2,15 @@ web:
   nginx:
     customLivenessProbe: |-
       httpGet:
-        host: 127.0.0.1
         port: {{ .Values.web.nginx.port }}
-        path: /status
+        path: /healthz
     customReadinessProbe: |-
       httpGet:
-        host: 127.0.0.1
-        port: 80
-        path: /status
+        port: {{ .Values.web.nginx.port }}
+        path: /healthz
   phpfpm:
     customLivenessProbe:
       tcpSocket:
-        host: 127.0.0.1
         port: 9000
     customReadinessProbe:
       exec:

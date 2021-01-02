@@ -9,9 +9,9 @@ metadata:
     app.kubernetes.io/component: web
 data:
 {{- if .Values.web.nginx.config.main }}
-  nginx.conf: {{ .Values.web.nginx.config.main | indent 4 }}
+  nginx.conf: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.config.main "global" .) | nindent 4 }}
 {{- end }}
 {{- if .Values.web.nginx.config.serverBlock }}
-  default.conf: {{ .Values.web.nginx.config.serverBlock | indent 4 }}
+  default.conf: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.config.serverBlock "global" .) | nindent 4 }}
 {{- end }}
 {{- end }}
