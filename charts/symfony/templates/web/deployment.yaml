@@ -45,7 +45,7 @@ spec:
         {{- else }}
           livenessProbe:
             httpGet:
-              port: { { .Values.web.nginx.port } }
+              port: {{ .Values.web.nginx.port }}
               path: /healthz
             periodSeconds: {{ .Values.web.nginx.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.web.nginx.livenessProbe.timeoutSeconds }}
