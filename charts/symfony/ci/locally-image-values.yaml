@@ -1,3 +1,11 @@
+commonLabels: |-
+  label.name: {{ .Release.Name }}
+  label.chart: {{ .Chart.Name }}
+
+commonAnnotations: |-
+  annotation.name: {{ .Release.Name }}
+  annotation.chart: {{ .Chart.Name }}
+
 image:
   repository: notexist
   tag: latest

@@ -88,7 +88,7 @@ Generate secret for environment variables
 {{/*
 Renders a value that contains template.
 Usage:
-{{ include "symfony.tplvalues.render" ( dict "value" .Values.path.to.the.Value "global" $) }}
+{{ include "symfony.tplvalues.render" (dict "value" .Values.path.to.the.Value "global" $) }}
 */}}
 {{- define "symfony.tplvalues.render" -}}
     {{- if typeIs "string" .value }}
