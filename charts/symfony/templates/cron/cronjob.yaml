@@ -8,6 +8,12 @@ metadata:
   labels:
     {{- include "symfony.labels" $ | nindent 4 }}
     app.kubernetes.io/component: cron-{{ .name }}
+  {{- if $.Values.commonLabels }}
+    {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonLabels "global" $) | nindent 4 }}
+  {{- end }}
+{{- if $.Values.commonAnnotations }}
+  annotations: {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonAnnotations "global" $) | nindent 4 }}
+{{- end }}
 spec:
   schedule: {{ .schedule | quote }}
   concurrencyPolicy: {{ .concurrencyPolicy | default "Forbid" }}
@@ -18,8 +24,14 @@ spec:
           labels:
             {{- include "symfony.labels" $ | nindent 12 }}
             app.kubernetes.io/component: cron-{{ .name }}
+          {{- if $.Values.commonLabels }}
+            {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonLabels "global" $) | nindent 12 }}
+          {{- end }}
           annotations:
             checksum/secret.env: {{ include "symfony.secret.env" (dict "context" . "global" $) | sha256sum }}
+          {{- if $.Values.commonAnnotations }}
+            {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonAnnotations "global" $) | nindent 12 }}
+          {{- end }}
         spec:
           restartPolicy: {{ .restartPolicy | default "OnFailure" }}
           initContainers: {{- include "symfony.initContainers.waiting" $ | nindent 12 }}

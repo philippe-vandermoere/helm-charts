@@ -7,6 +7,12 @@ metadata:
   labels:
     {{- include "symfony.labels" . | nindent 4 }}
     app.kubernetes.io/component: web
+  {{- if .Values.commonLabels }}
+    {{- include "symfony.tplvalues.render" (dict "value" .Values.commonLabels "global" .) | nindent 4 }}
+  {{- end }}
+{{- if .Values.commonAnnotations }}
+  annotations: {{- include "symfony.tplvalues.render" (dict "value" .Values.commonAnnotations "global" .) | nindent 4 }}
+{{- end }}
 spec:
   selector:
     matchLabels:
@@ -18,9 +24,15 @@ spec:
       labels:
         {{- include "symfony.labels" . | nindent 8 }}
         app.kubernetes.io/component: web
+      {{- if .Values.commonLabels }}
+        {{- include "symfony.tplvalues.render" (dict "value" .Values.commonLabels "global" .) | nindent 8 }}
+      {{- end }}
       annotations:
         checksum/secret.env: {{ include "symfony.secret.env" (dict "context" .Values.web.phpfpm "global" .) | sha256sum }}
         checksum/configmap.nginx: {{ include (print .Template.BasePath "/web/configmap.yaml") . | sha256sum }}
+      {{- if .Values.commonAnnotations }}
+        {{- include "symfony.tplvalues.render" (dict "value" .Values.commonAnnotations "global" .) | nindent 8 }}
+      {{- end }}
     spec:
       initContainers: {{- include "symfony.initContainers.waiting" . | nindent 8 }}
       containers:

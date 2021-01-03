@@ -45,6 +45,8 @@ The following tables lists the configurable parameters of the symfony chart, and
 | image.tag | Global PHP image tag | string | `"8.0-fpm-alpine"` |
 | image.pullPolicy | Global PHP image pull policy | string | `"IfNotPresent"` |
 | env | Global environment variables | object | `{}` |
+| commonLabels | Labels to add to all deployed objects | string | `nil` |
+| commonAnnotations | Annotations to add to all deployed objects | string | `nil` |
 
 ### Web
 
@@ -61,9 +63,9 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.nginx.image.pullPolicy | Nginx image pull policy | string | `"IfNotPresent"` |
 | web.nginx.config | Nginx configuration |  | Check `values.yaml` file |
 | web.nginx.livenessProbe | Nginx liveness probe |  | Check `values.yaml` file |
-| web.nginx.customLivenessProbe | Override default Nginx liveness probe | object | nil |
+| web.nginx.customLivenessProbe | Override default Nginx liveness probe | object | `nil` |
 | web.nginx.readinessProbe | Nginx readiness probe |  | Check `values.yaml` file |
-| web.nginx.customReadinessProbe | Override default Nginx readiness probe | object | nil |
+| web.nginx.customReadinessProbe | Override default Nginx readiness probe | object | `nil` |
 | web.nginx.resources.requests | The requested resources for the NGINX container | object | `{}` |
 | web.nginx.resources.limits | The resources limits for the NGINX container | object | `{}` |
 | web.phpfpm.image.repository | PHP-FPM image repository (override global PHP image) | string | |
@@ -71,9 +73,9 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.phpfpm.image.pullPolicy | PHP-FPM image pull policy (override global PHP image) | string | |
 | web.phpfpm.env | PHP-FPM environment variables (override global environment variables) | object | `{}` |
 | web.phpfpm.livenessProbe.enabled | PHP-FPM liveness probe |  | Check `values.yaml` file |
-| web.phpfpm.customLivenessProbe | Override default PHP-FPM liveness probe | object | nil |
+| web.phpfpm.customLivenessProbe | Override default PHP-FPM liveness probe | object | `nil` |
 | web.phpfpm.readinessProbe | PHP-FPM readiness probe | | Check `values.yaml` file |
-| web.phpfpm.customReadinessProbe | Override default PHP-FPM readiness probe | object | nil |
+| web.phpfpm.customReadinessProbe | Override default PHP-FPM readiness probe | object | `nil` |
 | web.phpfpm.resources.requests | The requested resources for the PHP-FPM container | object | `{}` |
 | web.phpfpm.resources.limits | The resources limits for the PHP-FPM container | object | `{}` |
 

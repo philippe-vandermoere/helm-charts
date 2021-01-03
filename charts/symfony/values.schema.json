@@ -20,6 +20,12 @@
     "env": {
       "$ref": "#/definitions/environment_variable"
     },
+    "commonLabels": {
+      "type": "string"
+    },
+    "commonAnnotations": {
+      "type": "string"
+    },
     "web": {
       "type": "object",
       "additionalProperties": false,

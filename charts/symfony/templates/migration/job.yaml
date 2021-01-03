@@ -8,9 +8,15 @@ metadata:
   labels:
     {{- include "symfony.labels" $ | nindent 4 }}
     app.kubernetes.io/component: migration-{{ .name }}
+  {{- if $.Values.commonLabels }}
+    {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonLabels "global" $) | nindent 4 }}
+  {{- end }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  {{- if $.Values.commonAnnotations }}
+    {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonAnnotations "global" $) | nindent 4 }}
+  {{- end }}
 spec:
   activeDeadlineSeconds: {{ .timeout | default 60 }}
   backoffLimit: {{ .backoffLimit | default 0 }}
@@ -20,8 +26,14 @@ spec:
       labels:
         {{- include "symfony.labels" $ | nindent 8 }}
         app.kubernetes.io/component: migration-{{ .name }}
+      {{- if $.Values.commonLabels }}
+        {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonLabels "global" $) | nindent 8 }}
+      {{- end }}
       annotations:
         checksum/secret.env: {{ include "symfony.secret.env" (dict "context" . "global" $) | sha256sum }}
+      {{- if $.Values.commonAnnotations }}
+        {{- include "symfony.tplvalues.render" (dict "value" $.Values.commonAnnotations "global" $) | nindent 8 }}
+      {{- end }}
     spec:
       restartPolicy: {{ .restartPolicy | default "Never" }}
       initContainers: {{- include "symfony.initContainers.waiting" $ | nindent 8 }}

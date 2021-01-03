@@ -7,6 +7,12 @@ metadata:
   labels:
     {{- include "symfony.labels" . | nindent 4 }}
     app.kubernetes.io/component: web
+  {{- if .Values.commonLabels }}
+    {{- include "symfony.tplvalues.render" (dict "value" .Values.commonLabels "global" .) | nindent 4 }}
+  {{- end }}
+{{- if .Values.commonAnnotations }}
+  annotations: {{- include "symfony.tplvalues.render" (dict "value" .Values.commonAnnotations "global" .) | nindent 4 }}
+{{- end }}
 data:
 {{- if .Values.web.nginx.config.main }}
   nginx.conf: {{- include "symfony.tplvalues.render" (dict "value" .Values.web.nginx.config.main "global" .) | nindent 4 }}
