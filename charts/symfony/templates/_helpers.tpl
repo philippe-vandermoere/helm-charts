@@ -72,6 +72,36 @@ Generate init container
 {{- end -}}
 
 {{/*
+Generate php image
+*/}}
+{{- define "symfony.image" -}}
+{{- if .value.image }}
+{{- if and .value.image.repository .value.image.tag }}
+{{- .value.image.repository }}:{{ .value.image.tag }}
+{{- else }}
+{{- .global.Values.image.repository }}:{{ .global.Values.image.tag }}
+{{- end }}
+{{- else }}
+{{- .global.Values.image.repository }}:{{ .global.Values.image.tag }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Generate php image pullPolicy
+*/}}
+{{- define "symfony.imagePullPolicy" -}}
+{{- if .value.image }}
+{{- if .value.image.pullPolicy }}
+{{- .value.image.pullPolicy }}
+{{- else }}
+{{- .global.Values.image.pullPolicy }}
+{{- end }}
+{{- else }}
+{{- .global.Values.image.pullPolicy }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Generate secret for environment variables
 */}}
 {{- define "symfony.secret.env" -}}

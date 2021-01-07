@@ -32,6 +32,10 @@ web:
       tag: stable-alpine
       pullPolicy: IfNotPresent
     config:
+      sharedPublicFiles:
+        enabled: false
+        initCommand: 'if [ -d {{ .Values.web.nginx.config.documentRoot }} ]; then cp -r {{ .Values.web.nginx.config.documentRoot }}/. /mnt/; fi'
+      documentRoot: /var/www/html/public
       main: |-
         user nginx;
         worker_processes auto;
@@ -71,7 +75,7 @@ web:
         server {
             listen {{ .Values.web.nginx.port }};
 
-            root /var/www/html/public;
+            root {{ .Values.web.nginx.config.documentRoot }};
 
             add_header X-Request-Id $request_uid;
 
