@@ -1,0 +1,5 @@
+web:
+  nginx:
+    config:
+      sharedPublicFiles:
+        enabled: false

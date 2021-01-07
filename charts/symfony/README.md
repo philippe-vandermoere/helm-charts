@@ -61,7 +61,11 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.nginx.image.repository | Nginx image repository | string | `"nginx"` |
 | web.nginx.image.tag | Nginx image tag | string | `"stable-alpine"` |
 | web.nginx.image.pullPolicy | Nginx image pull policy | string | `"IfNotPresent"` |
-| web.nginx.config | Nginx configuration |  | Check `values.yaml` file |
+| web.nginx.config.main | Nginx principal configuration | string | Check `values.yaml` file |
+| web.nginx.config.serverBlock | Nginx server configuration | string | Check `values.yaml` file |
+| web.nginx.config.documentRoot | Nginx configuration | string | `/var/www/html/public` |
+| web.nginx.config.sharedPublicFiles.enabled | Enabled Nginx shared public volume | bool | `false` |
+| web.nginx.config.sharedPublicFiles.initCommand | Command to populate Nginx shared public volume | string | Check `values.yaml` file |
 | web.nginx.livenessProbe | Nginx liveness probe |  | Check `values.yaml` file |
 | web.nginx.customLivenessProbe | Override default Nginx liveness probe | object | `nil` |
 | web.nginx.readinessProbe | Nginx readiness probe |  | Check `values.yaml` file |

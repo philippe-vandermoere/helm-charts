@@ -68,10 +68,31 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
+                "sharedPublicFiles",
+                "documentRoot",
                 "main",
                 "serverBlock"
               ],
               "properties": {
+                "sharedPublicFiles": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "enabled",
+                    "initCommand"
+                  ],
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "initCommand": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "documentRoot": {
+                  "type": "string"
+                },
                 "main": {
                   "type": "string"
                 },
