@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-- Writing the changelog of older version
+- Writing the changelog of previous version
 
 ## [1.2.0](https://github.com/philippe-vandermoere/helm-charts/compare/symfony-1.1.0...symfony-1.2.0) - 2021-01-03
 
