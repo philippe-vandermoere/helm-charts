@@ -1,0 +1,9 @@
+web:
+  ingress:
+    enabled: true
+    certManager: true
+    extraHosts:
+      - name: symfony2.local
+      - name: symfony3.local
+        path: /
+        pathType: ImplementationSpecific

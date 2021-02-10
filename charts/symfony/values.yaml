@@ -11,6 +11,17 @@ env: {}
 web:
   enabled: true
   replica: 3
+  ingress:
+    enabled: false
+    certManager: false
+    hostname: symfony.local
+    path: /
+    pathType: ImplementationSpecific
+#    extraHosts:
+#      - name: symfony.local
+#        path: /
+#        pathType: ImplementationSpecific
+
   service:
     type: ClusterIP
     port: 80
