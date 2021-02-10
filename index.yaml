@@ -2,6 +2,29 @@ apiVersion: v1
 entries:
   symfony:
   - apiVersion: v2
+    created: "2021-02-10T18:03:51.128416325Z"
+    description: Chart for PHP Symfony application
+    digest: 0fa4737119ccff371f54da5883974247f14a117f65ea95ee02e765552a48db7c
+    home: https://github.com/philippe-vandermoere/charts/tree/master/charts/symfony
+    icon: https://symfony.com/images/logos/header-logo.svg
+    keywords:
+    - symfony
+    - php
+    - nginx
+    kubeVersion: '>=1.18.0'
+    maintainers:
+    - email: vandermoere.philippe@gmail.com
+      name: Philippe VANDERMOERE
+    name: symfony
+    sources:
+    - https://hub.docker.com/_/php
+    - https://hub.docker.com/_/nginx
+    - https://github.com/symfony/symfony
+    type: application
+    urls:
+    - https://github.com/philippe-vandermoere/helm-charts/releases/download/symfony-1.4.0/symfony-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     created: "2021-01-07T22:59:31.496227965Z"
     description: Chart for PHP Symfony application
     digest: 57861926d9e66d30f1d7d61e22248ca68d4733b8f98bb1404f36b262c84981c7
