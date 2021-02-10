@@ -54,6 +54,14 @@ The following tables lists the configurable parameters of the symfony chart, and
 |-----|------|---------|-------------|
 | web.enabled | Enable web deployment | bool | `true` |
 | web.replica | Number of Symfony web replicas to deploy | int | `3` |
+| web.ingress.enabled | Enable ingress controller resource | bool | `false` |
+| web.ingress.certManager | Add annotations for cert-manager | bool | `false` |
+| web.ingress.hostname | Default host for the ingress resource | string | `"symfony.local"` |
+| web.ingress.path | Default path for the ingress resource | string | `"/"` |
+| web.ingress.pathType | Default pathType for the ingress resource | string | `"ImplementationSpecific"` |
+| web.ingress.extraHosts[].name | Additional host name to be covered | string | `nil` |
+| web.ingress.extraHosts[].path | Additional host path to be covered | string | `"/"` |
+| web.ingress.extraHosts[].pathType | Additional host pathType to be covered | string | `"ImplementationSpecific"` |
 | web.service.type | Kubernetes Service type | string | `"ClusterIP"` |
 | web.service.port | Kubernetes Service port | int | `80` |
 | web.service.clusterIP | Kubernetes Service IP | string | `""` |

@@ -32,6 +32,7 @@
       "required": [
         "enabled",
         "replica",
+        "ingress",
         "service",
         "nginx",
         "phpfpm"
@@ -42,6 +43,55 @@
         },
         "replica": {
           "$ref": "#/definitions/replica"
+        },
+        "ingress": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "certManager",
+            "hostname",
+            "path",
+            "pathType"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "certManager": {
+              "type": "boolean"
+            },
+            "hostname": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pathType": {
+              "$ref": "#/definitions/pathType"
+            },
+            "extraHosts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "pathType": {
+                    "$ref": "#/definitions/pathType"
+                  }
+                }
+              }
+            }
+          }
         },
         "service": {
           "$ref": "#/definitions/service"
@@ -578,6 +628,14 @@
     "replica": {
       "type": "integer",
       "minimum": 0
+    },
+    "pathType": {
+      "type": "string",
+      "enum": [
+        "Exact",
+        "Prefix",
+        "ImplementationSpecific"
+      ]
     }
   }
 }
