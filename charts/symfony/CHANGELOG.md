@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.4.0](https://github.com/philippe-vandermoere/helm-charts/compare/symfony-1.3.0...symfony-1.4.0) - 2021-02-10
+
+### Added
+
+- Option to enabled ingress
+
 ## [1.3.0](https://github.com/philippe-vandermoere/helm-charts/compare/symfony-1.2.0...symfony-1.3.0) - 2021-01-07
 
 ### Added
