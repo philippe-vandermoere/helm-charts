@@ -3,7 +3,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "symfony.fullname" . }}-web
+{{- if .Values.metrics.serviceMonitor.namespace }}
   namespace: {{ .Values.metrics.serviceMonitor.namespace }}
+{{- end }}
   labels: {{- include "symfony.labels" . | nindent 4 }}
 spec:
   selector:

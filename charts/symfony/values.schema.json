@@ -24,7 +24,7 @@
       "type": "string"
     },
     "commonAnnotations": {
-      "type": "string"
+      "$ref": "#/definitions/annotations"
     },
     "web": {
       "type": "object",
@@ -69,6 +69,9 @@
             },
             "pathType": {
               "$ref": "#/definitions/pathType"
+            },
+            "annotations": {
+              "$ref": "#/definitions/annotations"
             },
             "extraHosts": {
               "type": "array",
@@ -635,6 +638,23 @@
         "Exact",
         "Prefix",
         "ImplementationSpecific"
+      ]
+    },
+    "annotations": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "patternProperties": {
+            "^.*": {
+              "type": "string"
+            }
+          }
+        }
       ]
     }
   }
