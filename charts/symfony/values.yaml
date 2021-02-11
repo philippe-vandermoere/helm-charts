@@ -1,4 +1,5 @@
 version: ""
+commonAnnotations: {}
 
 image:
   repository: php
