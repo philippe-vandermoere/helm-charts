@@ -10,12 +10,15 @@ metadata:
     {{- include "symfony.tplvalues.render" (dict "value" .Values.commonLabels "global" .) | nindent 4 }}
   {{- end }}
   annotations:
-    {{- if .Values.web.ingress.certManager }}
+  {{- if .Values.web.ingress.annotations }}
+      {{- include "symfony.tplvalues.render" ( dict "value" .Values.web.ingress.annotations "global" .) | nindent 4 }}
+  {{- end }}
+  {{- if .Values.web.ingress.certManager }}
     kubernetes.io/tls-acme: "true"
-    {{- end }}
-    {{- if .Values.commonAnnotations }}
+  {{- end }}
+  {{- if .Values.commonAnnotations }}
     {{- include "symfony.tplvalues.render" (dict "value" .Values.commonAnnotations "global" .) | nindent 4 }}
-    {{- end }}
+  {{- end }}
 spec:
   rules:
   {{- if .Values.web.ingress.hostname }}

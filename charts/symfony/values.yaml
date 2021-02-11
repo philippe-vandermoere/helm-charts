@@ -17,6 +17,7 @@ web:
     hostname: symfony.local
     path: /
     pathType: ImplementationSpecific
+    annotations: {}
 #    extraHosts:
 #      - name: symfony.local
 #        path: /
@@ -209,7 +210,6 @@ metrics:
   enabled: false
   serviceMonitor:
     enabled: false
-    namespace: prometheus
   nginx:
     statusUrl: http://127.0.0.1:80/status
     port: 9113

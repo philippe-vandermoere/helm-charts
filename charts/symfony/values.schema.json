@@ -24,7 +24,14 @@
       "type": "string"
     },
     "commonAnnotations": {
-      "type": "string"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "patternProperties": {
+        "^.*": {
+          "type": "string"
+        }
+      }
     },
     "web": {
       "type": "object",
@@ -69,6 +76,16 @@
             },
             "pathType": {
               "$ref": "#/definitions/pathType"
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [],
+              "patternProperties": {
+                "^.*": {
+                  "type": "string"
+                }
+              }
             },
             "extraHosts": {
               "type": "array",

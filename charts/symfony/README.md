@@ -59,6 +59,7 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.ingress.hostname | Default host for the ingress resource | string | `"symfony.local"` |
 | web.ingress.path | Default path for the ingress resource | string | `"/"` |
 | web.ingress.pathType | Default pathType for the ingress resource | string | `"ImplementationSpecific"` |
+| web.ingress.annotations | Annotations to add to ingress object | object | `{}` |
 | web.ingress.extraHosts[].name | Additional host name to be covered | string | `nil` |
 | web.ingress.extraHosts[].path | Additional host path to be covered | string | `"/"` |
 | web.ingress.extraHosts[].pathType | Additional host pathType to be covered | string | `"ImplementationSpecific"` |
@@ -71,7 +72,7 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.nginx.image.pullPolicy | Nginx image pull policy | string | `"IfNotPresent"` |
 | web.nginx.config.main | Nginx principal configuration | string | Check `values.yaml` file |
 | web.nginx.config.serverBlock | Nginx server configuration | string | Check `values.yaml` file |
-| web.nginx.config.documentRoot | Nginx configuration | string | `/var/www/html/public` |
+| web.nginx.config.documentRoot | Nginx configuration | string | `"/var/www/html/public"` |
 | web.nginx.config.sharedPublicFiles.enabled | Enabled Nginx shared public volume | bool | `false` |
 | web.nginx.config.sharedPublicFiles.initCommand | Command to populate Nginx shared public volume | string | Check `values.yaml` file |
 | web.nginx.livenessProbe | Nginx liveness probe |  | Check `values.yaml` file |
@@ -99,9 +100,9 @@ The following tables lists the configurable parameters of the symfony chart, and
 | workers[].enabled | Enable worker deployment | bool | `true` |
 | workers[].replica | Number of worker replicas to deploy | int |  |
 | workers[].command | Command of worker | string |  |
-| workers[].image.repository | Worker image repository (override global PHP image) | string | `image.repository` |
-| workers[].image.tag | Worker image tag (override global PHP image)  | string | `image.tag` |
-| workers[].image.pullPolicy | Worker image pull policy (override global PHP image) | string | `image.pullPolicy` |
+| workers[].image.repository | Worker image repository (override global PHP image) | string | `"image.repository"` |
+| workers[].image.tag | Worker image tag (override global PHP image)  | string | `"image.tag"` |
+| workers[].image.pullPolicy | Worker image pull policy (override global PHP image) | string | `"image.pullPolicy"` |
 | workers[].env | Worker environment variables (override global environment variables) | object | `{}` |
 | workers[].resources.requests | The requested resources for the worker container  | object | `{}` |
 | workers[].resources.limits | The resources limits for the worker container | object | `{}` |
@@ -114,9 +115,9 @@ The following tables lists the configurable parameters of the symfony chart, and
 | crons[].enabled | Enable cron job | bool | `true` |
 | crons[].schedule | Cron schedule  | string |  |
 | crons[].command | Command of cron | string |  |
-| crons[].image.repository | Cron image repository (override global PHP image) | string | `image.repository` |
-| crons[].image.tag | Cron image tag (override global PHP image) | string | `image.tag` |
-| crons[].image.pullPolicy | Cron image pull policy (override global PHP image) | string | `image.pullPolicy` |
+| crons[].image.repository | Cron image repository (override global PHP image) | string | `"image.repository"` |
+| crons[].image.tag | Cron image tag (override global PHP image) | string | `"image.tag"` |
+| crons[].image.pullPolicy | Cron image pull policy (override global PHP image) | string | `"image.pullPolicy"` |
 | crons[].env | Cron environment variables (override global environment variables) | object | `{}` |
 | crons[].resources.requests | The requested resources for the cron container | object | `{}` |
 | crons[].resources.limits | The resources limits for the cron container | object | `{}` |
@@ -130,9 +131,9 @@ The following tables lists the configurable parameters of the symfony chart, and
 | migrations[].name | Migration name | string |  |
 | migrations[].enabled | Enable migration job | bool | `true` |
 | migrations[].command | Command of migration | string |  |
-| migrations[].image.repository | Migration image repository (override global PHP image) | string | `image.repository` |
-| migrations[].image.tag | Migration image tag (override global PHP image) | string | `image.tag` |
-| migrations[].image.pullPolicy | Migration image pull policy (override global PHP image) | string | `image.pullPolicy` |
+| migrations[].image.repository | Migration image repository (override global PHP image) | string | `"image.repository"` |
+| migrations[].image.tag | Migration image tag (override global PHP image) | string | `"image.tag"` |
+| migrations[].image.pullPolicy | Migration image pull policy (override global PHP image) | string | `"image.pullPolicy"` |
 | migrations[].env | Migration environment variables (override global environment variables) | object | `{}` |
 | migrations[].resources.requests | The requested resources for the migration container | object | `{}` |
 | migrations[].resources.limits | The resources limits for the migration container | object | `{}` |
@@ -158,7 +159,7 @@ The following tables lists the configurable parameters of the symfony chart, and
 |-----|------|---------|-------------|
 | metrics.enabled | Enable Prometheus exporter | bool | `false` |
 | metrics.serviceMonitor.enabled | Enable Prometheus service monitor | bool | `false` |
-| metrics.serviceMonitor.namespace | Prometheus namespace | string | `"prometheus"` |
+| metrics.serviceMonitor.namespace | Prometheus namespace | string | `nil` |
 | metrics.nginx.image.repository | Nginx Prometheus exporter image repository | string | `"nginx/nginx-prometheus-exporter"` |
 | metrics.nginx.image.tag | Nginx Prometheus exporter image tag | string | `"0.8.0"` |
 | metrics.nginx.image.pullPolicy | Nginx Prometheus exporter image pull policy | string | `"IfNotPresent"` |

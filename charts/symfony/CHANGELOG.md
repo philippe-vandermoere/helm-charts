@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.4.1](https://github.com/philippe-vandermoere/helm-charts/compare/symfony-1.4.0...symfony-1.4.1) - 2021-02-11
+
+### Fixed
+
+- Missing Ingress annotations
+- Default serviceMonitor namespace
+
 ## [1.4.0](https://github.com/philippe-vandermoere/helm-charts/compare/symfony-1.3.0...symfony-1.4.0) - 2021-02-10
 
 ### Added

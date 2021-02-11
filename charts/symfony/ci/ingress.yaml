@@ -2,6 +2,8 @@ web:
   ingress:
     enabled: true
     certManager: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
     extraHosts:
       - name: symfony2.local
       - name: symfony3.local
