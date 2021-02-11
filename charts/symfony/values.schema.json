@@ -24,14 +24,7 @@
       "type": "string"
     },
     "commonAnnotations": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [],
-      "patternProperties": {
-        "^.*": {
-          "type": "string"
-        }
-      }
+      "$ref": "#/definitions/annotations"
     },
     "web": {
       "type": "object",
@@ -78,14 +71,7 @@
               "$ref": "#/definitions/pathType"
             },
             "annotations": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [],
-              "patternProperties": {
-                "^.*": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/annotations"
             },
             "extraHosts": {
               "type": "array",
@@ -652,6 +638,23 @@
         "Exact",
         "Prefix",
         "ImplementationSpecific"
+      ]
+    },
+    "annotations": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [],
+          "patternProperties": {
+            "^.*": {
+              "type": "string"
+            }
+          }
+        }
       ]
     }
   }

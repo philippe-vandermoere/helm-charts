@@ -46,7 +46,7 @@ The following tables lists the configurable parameters of the symfony chart, and
 | image.pullPolicy | Global PHP image pull policy | string | `"IfNotPresent"` |
 | env | Global environment variables | object | `{}` |
 | commonLabels | Labels to add to all deployed objects | string | `nil` |
-| commonAnnotations | Annotations to add to all deployed objects | string | `nil` |
+| commonAnnotations | Annotations to add to all deployed objects | object|string | `{}` |
 
 ### Web
 
@@ -59,7 +59,7 @@ The following tables lists the configurable parameters of the symfony chart, and
 | web.ingress.hostname | Default host for the ingress resource | string | `"symfony.local"` |
 | web.ingress.path | Default path for the ingress resource | string | `"/"` |
 | web.ingress.pathType | Default pathType for the ingress resource | string | `"ImplementationSpecific"` |
-| web.ingress.annotations | Annotations to add to ingress object | object | `{}` |
+| web.ingress.annotations | Annotations to add to ingress object | object|string | `{}` |
 | web.ingress.extraHosts[].name | Additional host name to be covered | string | `nil` |
 | web.ingress.extraHosts[].path | Additional host path to be covered | string | `"/"` |
 | web.ingress.extraHosts[].pathType | Additional host pathType to be covered | string | `"ImplementationSpecific"` |
